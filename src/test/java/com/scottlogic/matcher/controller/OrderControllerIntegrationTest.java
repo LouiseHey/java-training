@@ -130,4 +130,66 @@ class OrderControllerIntegrationTest {
         assertThat(trades.get(0).getPrice(), equalTo(10));
         assertThat(trades.get(0).getQuantity(), equalTo(10));
     }
+
+    @Test
+    public void givenNegativeQuantity_whenPlaceOrder_ThenBadRequest() {
+        JSONObject requestParams = new JSONObject();
+        requestParams.put("accountId", "accountId");
+        requestParams.put("price", 10);
+        requestParams.put("quantity", -10);
+        requestParams.put("action", "BUY");
+
+        given().
+                header("Content-Type", "application/json").
+                body(requestParams.toJSONString()).
+                when().
+                post("/order").
+                then().
+                statusCode(400);
+
+        JSONObject requestParams2 = new JSONObject();
+        requestParams2.put("accountId", "accountId");
+        requestParams2.put("price", 10);
+        requestParams2.put("quantity", -10);
+        requestParams2.put("action", "SELL");
+
+        given().
+                header("Content-Type", "application/json").
+                body(requestParams2.toJSONString()).
+                when().
+                post("/order").
+                then().
+                statusCode(400);
+    }
+
+    @Test
+    public void givenNegativePrice_whenPlaceOrder_ThenBadRequest() {
+        JSONObject requestParams = new JSONObject();
+        requestParams.put("accountId", "accountId");
+        requestParams.put("price", -10);
+        requestParams.put("quantity", -10);
+        requestParams.put("action", "BUY");
+
+        given().
+                header("Content-Type", "application/json").
+                body(requestParams.toJSONString()).
+                when().
+                post("/order").
+                then().
+                statusCode(400);
+
+        JSONObject requestParams2 = new JSONObject();
+        requestParams2.put("accountId", "accountId");
+        requestParams2.put("price", -10);
+        requestParams2.put("quantity", 10);
+        requestParams2.put("action", "SELL");
+
+        given().
+                header("Content-Type", "application/json").
+                body(requestParams2.toJSONString()).
+                when().
+                post("/order").
+                then().
+                statusCode(400);
+    }
 }

@@ -4,6 +4,7 @@ import com.scottlogic.matcher.controller.dto.OrderDto;
 import com.scottlogic.matcher.controller.dto.TradeDto;
 import com.scottlogic.matcher.service.Matcher;
 import com.scottlogic.matcher.models.Order;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class OrderController {
     }
 
     @PostMapping(value = "")
-    public ResponseEntity<List<TradeDto>> placeOrder(@RequestBody OrderDto orderDto) {
+    public ResponseEntity<List<TradeDto>> placeOrder(@Valid @RequestBody OrderDto orderDto) {
         Order order = orderDto.toModel();
         List<TradeDto> trades = matcher.receiveOrder(order).stream().map(TradeDto::create).toList();
         return new ResponseEntity<>(trades, HttpStatus.OK);
