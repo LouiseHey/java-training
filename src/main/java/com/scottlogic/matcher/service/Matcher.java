@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -78,9 +79,11 @@ public class Matcher {
     }
 
     private void sortOrderLists() {
-        buyOrders.removeIf(o -> o.getQuantity() == 0);
-        sellOrders.removeIf(o -> o.getQuantity() == 0);
-        buyOrders.sort((o1, o2) -> o2.getPrice() - o1.getPrice());
-        sellOrders.sort(Comparator.comparingInt(Order::getPrice));
+        buyOrders.removeIf(Order::isQuantityZero);
+        buyOrders.sort(Comparator.naturalOrder());
+
+        sellOrders.removeIf(Order::isQuantityZero);
+        sellOrders.sort(Comparator.naturalOrder());
+        Collections.reverse(sellOrders);
     }
 }

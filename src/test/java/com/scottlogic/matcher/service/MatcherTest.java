@@ -1,6 +1,6 @@
 package com.scottlogic.matcher.service;
 
-import com.scottlogic.matcher.models.Account;
+import com.scottlogic.matcher.models.User;
 import com.scottlogic.matcher.models.Action;
 import com.scottlogic.matcher.models.Order;
 import com.scottlogic.matcher.models.Trade;
@@ -20,11 +20,11 @@ class MatcherTest {
 
     @Test
     void givenEmptySellOrdersList_WhenReceiveBuyOrder_OrderAddedToBuyOrders() {
-        Account expectedAccount = new Account();
+        User expectedUser = new User();
         int expectedPrice = 10;
         int expectedQuantity = 20;
 
-        Order order = new Order(expectedAccount, expectedPrice, expectedQuantity, Action.BUY);
+        Order order = new Order(expectedUser, expectedPrice, expectedQuantity, Action.BUY);
         List<Trade> trades = matcher.receiveOrder(order);
 
         List<Order> buyOrders = matcher.getBuyOrders();
@@ -36,13 +36,13 @@ class MatcherTest {
 
     @Test
     void givenBuyOrderInList_WhenReceiveBuyOrder_BuyOrderSortedByPriceDescending() {
-        Order buyOrder = new Order(new Account(), 20, 20, Action.BUY);
+        Order buyOrder = new Order(new User(), 20, 20, Action.BUY);
         matcher.receiveOrder(buyOrder);
 
-        Order buyOrder1 = new Order(new Account(), 30, 20, Action.BUY);
+        Order buyOrder1 = new Order(new User(), 30, 20, Action.BUY);
         matcher.receiveOrder(buyOrder1);
 
-        Order buyOrder2 = new Order(new Account(), 25, 20, Action.BUY);
+        Order buyOrder2 = new Order(new User(), 25, 20, Action.BUY);
         matcher.receiveOrder(buyOrder2);
 
         List<Order> buyOrders = matcher.getBuyOrders();
@@ -55,10 +55,10 @@ class MatcherTest {
 
     @Test
     void givenSellOrdersListMatchesExactly_WhenReceiveBuyOrder_TradeCompletedAndOrderListsEmpty() {
-        Order sellOrder = new Order(new Account(), 10, 20, Action.SELL);
+        Order sellOrder = new Order(new User(), 10, 20, Action.SELL);
         matcher.receiveOrder(sellOrder);
 
-        Order buyOrder = new Order(new Account(), 10, 20, Action.BUY);
+        Order buyOrder = new Order(new User(), 10, 20, Action.BUY);
         List<Trade> trades = matcher.receiveOrder(buyOrder);
 
         List<Order> buyOrders = matcher.getBuyOrders();
@@ -74,10 +74,10 @@ class MatcherTest {
 
     @Test
     void givenBuyOrderMatchesPartially_WhenReceiveBuyOrder_TradeCompleted() {
-        Order sellOrder = new Order(new Account(), 10, 10, Action.SELL);
+        Order sellOrder = new Order(new User(), 10, 10, Action.SELL);
         matcher.receiveOrder(sellOrder);
 
-        Order buyOrder = new Order(new Account(), 15, 20, Action.BUY);
+        Order buyOrder = new Order(new User(), 15, 20, Action.BUY);
         List<Trade> trades = matcher.receiveOrder(buyOrder);
 
         List<Order> buyOrders = matcher.getBuyOrders();
@@ -94,10 +94,10 @@ class MatcherTest {
 
     @Test
     void givenSellOrderMatchesPartially_WhenReceiveBuyOrder_TradeCompleted() {
-        Order sellOrder = new Order(new Account(), 10, 20, Action.SELL);
+        Order sellOrder = new Order(new User(), 10, 20, Action.SELL);
         matcher.receiveOrder(sellOrder);
 
-        Order buyOrder = new Order(new Account(), 15, 5, Action.BUY);
+        Order buyOrder = new Order(new User(), 15, 5, Action.BUY);
         List<Trade> trades = matcher.receiveOrder(buyOrder);
 
         List<Order> buyOrders = matcher.getBuyOrders();
@@ -114,14 +114,14 @@ class MatcherTest {
 
     @Test
     void givenNoMatchWithSellOrders_WhenReceiveBuyOrder_OrderAdded() {
-        Order sellOrder = new Order(new Account(), 10, 20, Action.SELL);
+        Order sellOrder = new Order(new User(), 10, 20, Action.SELL);
         matcher.receiveOrder(sellOrder);
 
-        Account expectedAccount = new Account();
+        User expectedUser = new User();
         int expectedPrice = 5;
         int expectedQuantity = 5;
 
-        Order buyOrder = new Order(expectedAccount, expectedPrice, expectedQuantity, Action.BUY);
+        Order buyOrder = new Order(expectedUser, expectedPrice, expectedQuantity, Action.BUY);
         List<Trade> trades = matcher.receiveOrder(buyOrder);
 
         List<Order> buyOrders = matcher.getBuyOrders();
@@ -136,13 +136,13 @@ class MatcherTest {
 
     @Test
     void givenMatchesMultipleSellOrders_WhenReceiveBuyOrder_TradesCompleted() {
-        Order sellOrder = new Order(new Account(), 10, 20, Action.SELL);
+        Order sellOrder = new Order(new User(), 10, 20, Action.SELL);
         matcher.receiveOrder(sellOrder);
 
-        Order sellOrder2 = new Order(new Account(), 15, 10, Action.SELL);
+        Order sellOrder2 = new Order(new User(), 15, 10, Action.SELL);
         matcher.receiveOrder(sellOrder2);
 
-        Order buyOrder = new Order(new Account(), 20, 25, Action.BUY);
+        Order buyOrder = new Order(new User(), 20, 25, Action.BUY);
         List<Trade> trades = matcher.receiveOrder(buyOrder);
 
         List<Order> buyOrders = matcher.getBuyOrders();
@@ -161,13 +161,13 @@ class MatcherTest {
 
     @Test
     void givenPartiallyMatchesMultipleSellOrders_WhenReceiveBuyOrder_TradesCompleted() {
-        Order sellOrder = new Order(new Account(), 10, 10, Action.SELL);
+        Order sellOrder = new Order(new User(), 10, 10, Action.SELL);
         matcher.receiveOrder(sellOrder);
 
-        Order sellOrder2 = new Order(new Account(), 15, 10, Action.SELL);
+        Order sellOrder2 = new Order(new User(), 15, 10, Action.SELL);
         matcher.receiveOrder(sellOrder2);
 
-        Order buyOrder = new Order(new Account(), 20, 25, Action.BUY);
+        Order buyOrder = new Order(new User(), 20, 25, Action.BUY);
         List<Trade> trades = matcher.receiveOrder(buyOrder);
 
         List<Order> buyOrders = matcher.getBuyOrders();
@@ -187,11 +187,11 @@ class MatcherTest {
 
     @Test
     void givenEmptyBuyOrdersList_WhenReceiveSellOrder_OrderAddedToBuyOrders() {
-        Account expectedAccount = new Account();
+        User expectedUser = new User();
         int expectedPrice = 10;
         int expectedQuantity = 20;
 
-        Order order = new Order(expectedAccount, expectedPrice, expectedQuantity, Action.SELL);
+        Order order = new Order(expectedUser, expectedPrice, expectedQuantity, Action.SELL);
         List<Trade> trades = matcher.receiveOrder(order);
 
         List<Order> sellOrders = matcher.getSellOrders();
@@ -203,13 +203,13 @@ class MatcherTest {
 
     @Test
     void givenSellOrderInList_WhenReceiveSellOrder_SellOrderSortedByPriceAscending() {
-        Order sellOrder = new Order(new Account(), 30, 20, Action.SELL);
+        Order sellOrder = new Order(new User(), 30, 20, Action.SELL);
         matcher.receiveOrder(sellOrder);
 
-        Order sellOrder1 = new Order(new Account(), 20, 20, Action.SELL);
+        Order sellOrder1 = new Order(new User(), 20, 20, Action.SELL);
         matcher.receiveOrder(sellOrder1);
 
-        Order sellOrder2 = new Order(new Account(), 25, 20, Action.SELL);
+        Order sellOrder2 = new Order(new User(), 25, 20, Action.SELL);
         matcher.receiveOrder(sellOrder2);
 
         List<Order> buyOrders = matcher.getSellOrders();
@@ -222,10 +222,10 @@ class MatcherTest {
 
     @Test
     void givenBuyOrdersListMatchesExactly_WhenReceiveSellOrder_TradeCompletedAndOrderListsEmpty() {
-        Order buyOrder = new Order(new Account(), 10, 20, Action.BUY);
+        Order buyOrder = new Order(new User(), 10, 20, Action.BUY);
         matcher.receiveOrder(buyOrder);
 
-        Order sellOrder = new Order(new Account(), 10, 20, Action.SELL);
+        Order sellOrder = new Order(new User(), 10, 20, Action.SELL);
         List<Trade> trades = matcher.receiveOrder(sellOrder);
 
         List<Order> buyOrders = matcher.getBuyOrders();
@@ -241,10 +241,10 @@ class MatcherTest {
 
     @Test
     void givenSellOrderMatchesPartially_WhenReceiveSellOrder_TradeCompleted() {
-        Order buyOrder = new Order(new Account(), 15, 10, Action.BUY);
+        Order buyOrder = new Order(new User(), 15, 10, Action.BUY);
         matcher.receiveOrder(buyOrder);
 
-        Order sellOrder = new Order(new Account(), 10, 20, Action.SELL);
+        Order sellOrder = new Order(new User(), 10, 20, Action.SELL);
         List<Trade> trades = matcher.receiveOrder(sellOrder);
 
         List<Order> buyOrders = matcher.getBuyOrders();
@@ -261,10 +261,10 @@ class MatcherTest {
 
     @Test
     void givenBuyOrderMatchesPartially_WhenReceiveSellOrder_TradeCompleted() {
-        Order buyOrder = new Order(new Account(), 15, 20, Action.BUY);
+        Order buyOrder = new Order(new User(), 15, 20, Action.BUY);
         matcher.receiveOrder(buyOrder);
 
-        Order sellOrder = new Order(new Account(), 10, 5, Action.SELL);
+        Order sellOrder = new Order(new User(), 10, 5, Action.SELL);
         List<Trade> trades = matcher.receiveOrder(sellOrder);
 
         List<Order> buyOrders = matcher.getBuyOrders();
@@ -281,14 +281,14 @@ class MatcherTest {
 
     @Test
     void givenNoMatchWithBuyOrders_WhenReceiveSellOrder_OrderAdded() {
-        Order buyOrder = new Order(new Account(), 5, 20, Action.BUY);
+        Order buyOrder = new Order(new User(), 5, 20, Action.BUY);
         matcher.receiveOrder(buyOrder);
 
-        Account expectedAccount = new Account();
+        User expectedUser = new User();
         int expectedPrice = 10;
         int expectedQuantity = 5;
 
-        Order sellOrder = new Order(expectedAccount, expectedPrice, expectedQuantity, Action.SELL);
+        Order sellOrder = new Order(expectedUser, expectedPrice, expectedQuantity, Action.SELL);
         List<Trade> trades = matcher.receiveOrder(sellOrder);
 
         List<Order> buyOrders = matcher.getBuyOrders();
@@ -303,13 +303,13 @@ class MatcherTest {
 
     @Test
     void givenMatchesMultipleBuyOrders_WhenReceiveSellOrder_TradesCompleted() {
-        Order buyOrder = new Order(new Account(), 20, 20, Action.BUY);
+        Order buyOrder = new Order(new User(), 20, 20, Action.BUY);
         matcher.receiveOrder(buyOrder);
 
-        Order buyOrder2 = new Order(new Account(), 15, 10, Action.BUY);
+        Order buyOrder2 = new Order(new User(), 15, 10, Action.BUY);
         matcher.receiveOrder(buyOrder2);
 
-        Order sellOrder = new Order(new Account(), 10, 25, Action.SELL);
+        Order sellOrder = new Order(new User(), 10, 25, Action.SELL);
         List<Trade> trades = matcher.receiveOrder(sellOrder);
 
         List<Order> buyOrders = matcher.getBuyOrders();
@@ -328,13 +328,13 @@ class MatcherTest {
 
     @Test
     void givenPartiallyMatchesMultipleBuyOrders_WhenReceiveSellOrder_TradesCompleted() {
-        Order buyOrder = new Order(new Account(), 20, 10, Action.BUY);
+        Order buyOrder = new Order(new User(), 20, 10, Action.BUY);
         matcher.receiveOrder(buyOrder);
 
-        Order buyOrder2 = new Order(new Account(), 15, 10, Action.BUY);
+        Order buyOrder2 = new Order(new User(), 15, 10, Action.BUY);
         matcher.receiveOrder(buyOrder2);
 
-        Order sellOrder = new Order(new Account(), 10, 25, Action.SELL);
+        Order sellOrder = new Order(new User(), 10, 25, Action.SELL);
         List<Trade> trades = matcher.receiveOrder(sellOrder);
 
         List<Order> buyOrders = matcher.getBuyOrders();

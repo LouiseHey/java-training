@@ -1,6 +1,6 @@
 package com.scottlogic.matcher.controller.dto;
 
-import com.scottlogic.matcher.models.Account;
+import com.scottlogic.matcher.models.User;
 import com.scottlogic.matcher.models.Action;
 import com.scottlogic.matcher.models.Order;
 import jakarta.validation.constraints.Min;
@@ -25,10 +25,10 @@ public class OrderDto {
     }
 
     public static OrderDto create(Order order) {
-        return new OrderDto(order.getAccount().getAccountId(), order.getPrice(), order.getQuantity(), order.getAction());
+        return new OrderDto(order.getUser().getUserId(), order.getPrice(), order.getQuantity(), order.getAction());
     }
 
     public Order toModel() {
-        return new Order(new Account(this.accountId), this.price, this.quantity, this.action);
+        return new Order(new User(this.accountId), this.price, this.quantity, this.action);
     }
 }
