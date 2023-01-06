@@ -34,7 +34,7 @@ class OrderControllerIntegrationTest {
     @Test
     public void whenGetBuyOrders_ThenBuyOrdersReturned() {
         JSONObject requestParams = new JSONObject();
-        requestParams.put("accountId", "accountId");
+        requestParams.put("userId", "userId");
         requestParams.put("price", 10);
         requestParams.put("quantity", 10);
         requestParams.put("action", "BUY");
@@ -56,7 +56,7 @@ class OrderControllerIntegrationTest {
                         as(new TypeRef<>() {});
 
         assertThat(orders, hasSize(1));
-        assertThat(orders.get(0).getAccountId(), equalTo("accountId"));
+        assertThat(orders.get(0).getUserId(), equalTo("userId"));
         assertThat(orders.get(0).getPrice(), equalTo(10));
         assertThat(orders.get(0).getQuantity(), equalTo(10));
         assertThat(orders.get(0).getAction(), equalTo(Action.BUY));
@@ -65,7 +65,7 @@ class OrderControllerIntegrationTest {
     @Test
     public void whenGetSellOrders_ThenSellOrdersReturned() {
         JSONObject requestParams = new JSONObject();
-        requestParams.put("accountId", "accountId");
+        requestParams.put("userId", "userId");
         requestParams.put("price", 10);
         requestParams.put("quantity", 10);
         requestParams.put("action", "SELL");
@@ -87,7 +87,7 @@ class OrderControllerIntegrationTest {
                         as(new TypeRef<>() {});
 
         assertThat(orders, hasSize(1));
-        assertThat(orders.get(0).getAccountId(), equalTo("accountId"));
+        assertThat(orders.get(0).getUserId(), equalTo("userId"));
         assertThat(orders.get(0).getPrice(), equalTo(10));
         assertThat(orders.get(0).getQuantity(), equalTo(10));
         assertThat(orders.get(0).getAction(), equalTo(Action.SELL));
@@ -96,7 +96,7 @@ class OrderControllerIntegrationTest {
     @Test
     public void givenBuyOrderInList_whenPlaceSellOrder_ThenTradeReturned() {
         JSONObject requestParams = new JSONObject();
-        requestParams.put("accountId", "accountId");
+        requestParams.put("userId", "userId");
         requestParams.put("price", 10);
         requestParams.put("quantity", 10);
         requestParams.put("action", "BUY");
@@ -110,7 +110,7 @@ class OrderControllerIntegrationTest {
                 statusCode(200);
 
         JSONObject requestParams2 = new JSONObject();
-        requestParams2.put("accountId", "accountId");
+        requestParams2.put("userId", "userId");
         requestParams2.put("price", 10);
         requestParams2.put("quantity", 10);
         requestParams2.put("action", "SELL");
@@ -134,7 +134,7 @@ class OrderControllerIntegrationTest {
     @Test
     public void givenNegativeQuantity_whenPlaceOrder_ThenBadRequest() {
         JSONObject requestParams = new JSONObject();
-        requestParams.put("accountId", "accountId");
+        requestParams.put("userId", "userId");
         requestParams.put("price", 10);
         requestParams.put("quantity", -10);
         requestParams.put("action", "BUY");
@@ -148,7 +148,7 @@ class OrderControllerIntegrationTest {
                 statusCode(400);
 
         JSONObject requestParams2 = new JSONObject();
-        requestParams2.put("accountId", "accountId");
+        requestParams2.put("userId", "userId");
         requestParams2.put("price", 10);
         requestParams2.put("quantity", -10);
         requestParams2.put("action", "SELL");
@@ -165,7 +165,7 @@ class OrderControllerIntegrationTest {
     @Test
     public void givenNegativePrice_whenPlaceOrder_ThenBadRequest() {
         JSONObject requestParams = new JSONObject();
-        requestParams.put("accountId", "accountId");
+        requestParams.put("userId", "userId");
         requestParams.put("price", -10);
         requestParams.put("quantity", -10);
         requestParams.put("action", "BUY");
@@ -179,7 +179,7 @@ class OrderControllerIntegrationTest {
                 statusCode(400);
 
         JSONObject requestParams2 = new JSONObject();
-        requestParams2.put("accountId", "accountId");
+        requestParams2.put("userId", "userId");
         requestParams2.put("price", -10);
         requestParams2.put("quantity", 10);
         requestParams2.put("action", "SELL");

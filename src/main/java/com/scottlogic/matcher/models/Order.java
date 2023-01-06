@@ -6,18 +6,18 @@ import lombok.Getter;
 @Getter
 public class Order implements Comparable<Order> {
     private final String orderId;
-    private final User user;
+    private final String userId;
     private final int price;
     private int quantity;
     private final Action action;
 
-    public Order(User user, int price, int quantity, Action action) {
-        this(IdGenerator.generate(), user, price, quantity, action);
+    public Order(String userId, int price, int quantity, Action action) {
+        this(IdGenerator.generate(), userId, price, quantity, action);
     }
 
-    private Order(String orderId, User user, int price, int quantity, Action action) {
+    private Order(String orderId, String userId, int price, int quantity, Action action) {
         this.orderId = orderId;
-        this.user = user;
+        this.userId = userId;
         this.price = price;
         this.quantity = quantity;
         this.action = action;
