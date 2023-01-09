@@ -58,6 +58,11 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
+    public String getUsername(HttpServletRequest req) {
+        String token = resolveToken(req);
+        return getUsername(token);
+    }
+
     public String getUsername(String token) {
         return Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token).getBody().getSubject();
     }

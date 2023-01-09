@@ -4,6 +4,8 @@ import com.scottlogic.matcher.controller.dto.OrderDto;
 import com.scottlogic.matcher.controller.dto.TradeDto;
 import com.scottlogic.matcher.service.Matcher;
 import com.scottlogic.matcher.models.Order;
+import com.scottlogic.matcher.utility.jwt.JwtTokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +17,11 @@ import java.util.List;
 public class OrderController {
 
     private final Matcher matcher;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public OrderController(Matcher matcher) {
+    public OrderController(Matcher matcher, JwtTokenProvider jwtTokenProvider) {
         this.matcher = matcher;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @GetMapping(value = "/buy")
@@ -33,8 +37,10 @@ public class OrderController {
     }
 
     @PostMapping(value = "")
-    public ResponseEntity<List<TradeDto>> placeOrder(@Valid @RequestBody OrderDto orderDto) {
-        Order order = orderDto.toModel();
+    public ResponseEntity<List<TradeDto>> placeOrder(HttpServletRequest req, @Valid @RequestBody OrderDto orderDto) {
+        String username = jwtTokenProvider.getUsername(req);
+
+        Order order = orderDto.toModel(username);
         List<TradeDto> trades = matcher.receiveOrder(order).stream().map(TradeDto::create).toList();
         return ResponseEntity.ok(trades);
     }

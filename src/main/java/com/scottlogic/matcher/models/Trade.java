@@ -16,8 +16,8 @@ public class Trade {
     public Trade(Order buyOrder, Order sellOrder, int price) {
         this(buyOrder.getOrderId(),
                 sellOrder.getOrderId(),
-                buyOrder.getUserId(),
-                sellOrder.getUserId(),
+                buyOrder.getUsername(),
+                sellOrder.getUsername(),
                 price,
                 Math.min(sellOrder.getQuantity(), buyOrder.getQuantity()));
     }

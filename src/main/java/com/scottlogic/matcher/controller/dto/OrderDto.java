@@ -3,31 +3,35 @@ package com.scottlogic.matcher.controller.dto;
 import com.scottlogic.matcher.models.Action;
 import com.scottlogic.matcher.models.Order;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class OrderDto {
-    private final String userId;
+    private final String username;
+    @NotNull
     @Min(value=0L, message="Price must be non negative.")
-    private final int price;
+    private final Integer price;
+    @NotNull
     @Min(value=0L, message="Price must be non negative.")
-    private int quantity;
+    private Integer quantity;
+    @NotNull
     private final Action action;
 
-    public OrderDto(String userId, int price, int quantity, Action action) {
-        this.userId = userId;
+    public OrderDto(String username, Integer price, Integer quantity, Action action) {
+        this.username = username;
         this.price = price;
         this.quantity = quantity;
         this.action = action;
     }
 
     public static OrderDto create(Order order) {
-        return new OrderDto(order.getUserId(), order.getPrice(), order.getQuantity(), order.getAction());
+        return new OrderDto(order.getUsername(), order.getPrice(), order.getQuantity(), order.getAction());
     }
 
-    public Order toModel() {
-        return new Order(this.userId, this.price, this.quantity, this.action);
+    public Order toModel(String username) {
+        return new Order(username, this.price, this.quantity, this.action);
     }
 }
