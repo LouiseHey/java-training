@@ -1,6 +1,6 @@
 package com.scottlogic.matcher.utility.jwt;
 
-import com.scottlogic.matcher.service.UserDetailsService;
+import com.scottlogic.matcher.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,9 +21,9 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserDetailsService userService;
+    private final UserDetailsServiceImpl userService;
 
-    public JwtTokenFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userService) {
+    public JwtTokenFilter(JwtTokenProvider jwtTokenProvider, UserDetailsServiceImpl userService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
     }
