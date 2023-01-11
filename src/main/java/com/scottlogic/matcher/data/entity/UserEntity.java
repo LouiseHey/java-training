@@ -8,12 +8,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="User")
 public class UserEntity {
     @Id
-    public String id;
+    private String id;
 
     @Indexed(unique=true)
-    public String username;
+    private String username;
 
-    public String password;
+    private String password;
 
     public UserEntity() {}
 

@@ -1,11 +1,15 @@
-package com.scottlogic.matcher.controller;
+package com.scottlogic.matcher.controller.e2e;
 
 import com.scottlogic.matcher.controller.dto.OrderDto;
 import com.scottlogic.matcher.controller.dto.TradeDto;
+import com.scottlogic.matcher.controller.e2e.util.DatabaseUtil;
+import com.scottlogic.matcher.controller.e2e.util.TestConstants;
 import com.scottlogic.matcher.models.Action;
+import com.scottlogic.matcher.models.User;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import net.minidev.json.JSONObject;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,9 +25,7 @@ import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class OrderControllerIntegrationTest {
-
-    private static final String AUTH_HEADER = "Authorization";
+class OrderControllerTest {
 
     @LocalServerPort
     private int port;
@@ -34,19 +36,17 @@ class OrderControllerIntegrationTest {
     public void setUp() {
         RestAssured.port = port;
 
-        JSONObject requestParams = new JSONObject();
-        requestParams.put("username", "Louise");
-        requestParams.put("password", "Password");
+        cleanUp();
 
-        this.token = "Bearer " + given().
-                header("Content-Type", "application/json").
-                body(requestParams.toJSONString()).
-                when().
-                post("/auth/signin").
-                then().
-                statusCode(200).
-                extract().
-                header(AUTH_HEADER);
+        User user = new User(TestConstants.USERNAME, TestConstants.PASSWORD);
+        DatabaseUtil.insertUser(user);
+
+        this.token = DatabaseUtil.retrieveToken(user);
+    }
+
+    @AfterEach
+    public void cleanUp() {
+        DatabaseUtil.deleteUser(TestConstants.USERNAME);
     }
 
     @Test
@@ -58,7 +58,7 @@ class OrderControllerIntegrationTest {
 
         given().
                 header("Content-Type", "application/json").
-                header(AUTH_HEADER, token).
+                header(TestConstants.AUTH_HEADER, token).
                 body(requestParams.toJSONString()).
         when().
                 post("/order").
@@ -67,7 +67,7 @@ class OrderControllerIntegrationTest {
 
         List<OrderDto> orders =
                 given().
-                        header(AUTH_HEADER, token).
+                        header(TestConstants.AUTH_HEADER, token).
                 when().
                         get("/order/buy").
                 then().
@@ -76,7 +76,7 @@ class OrderControllerIntegrationTest {
                         as(new TypeRef<>() {});
 
         assertThat(orders, hasSize(1));
-        assertThat(orders.get(0).getUsername(), equalTo("Louise"));
+        assertThat(orders.get(0).getUsername(), equalTo(TestConstants.USERNAME));
         assertThat(orders.get(0).getPrice(), equalTo(10));
         assertThat(orders.get(0).getQuantity(), equalTo(10));
         assertThat(orders.get(0).getAction(), equalTo(Action.BUY));
@@ -91,7 +91,7 @@ class OrderControllerIntegrationTest {
 
         given().
                 header("Content-Type", "application/json").
-                header(AUTH_HEADER, token).
+                header(TestConstants.AUTH_HEADER, token).
                 body(requestParams.toJSONString()).
         when().
                 post("/order").
@@ -100,7 +100,7 @@ class OrderControllerIntegrationTest {
 
         List<OrderDto> orders =
                 given().
-                        header(AUTH_HEADER, token).
+                        header(TestConstants.AUTH_HEADER, token).
                 when().
                         get("/order/sell").
                 then().
@@ -109,7 +109,7 @@ class OrderControllerIntegrationTest {
                         as(new TypeRef<>() {});
 
         assertThat(orders, hasSize(1));
-        assertThat(orders.get(0).getUsername(), equalTo("Louise"));
+        assertThat(orders.get(0).getUsername(), equalTo(TestConstants.USERNAME));
         assertThat(orders.get(0).getPrice(), equalTo(10));
         assertThat(orders.get(0).getQuantity(), equalTo(10));
         assertThat(orders.get(0).getAction(), equalTo(Action.SELL));
@@ -124,7 +124,7 @@ class OrderControllerIntegrationTest {
 
         given().
                 header("Content-Type", "application/json").
-                header(AUTH_HEADER, token).
+                header(TestConstants.AUTH_HEADER, token).
                 body(requestParams.toJSONString()).
         when().
                 post("/order").
@@ -139,7 +139,7 @@ class OrderControllerIntegrationTest {
         List<TradeDto> trades =
                 given().
                         header("Content-Type", "application/json").
-                        header(AUTH_HEADER, token).
+                        header(TestConstants.AUTH_HEADER, token).
                         body(requestParams2.toJSONString()).
                 when().
                         post("/order").
@@ -162,7 +162,7 @@ class OrderControllerIntegrationTest {
 
         given().
                 header("Content-Type", "application/json").
-                header(AUTH_HEADER, token).
+                header(TestConstants.AUTH_HEADER, token).
                 body(requestParams.toJSONString()).
                 when().
                 post("/order").
@@ -176,7 +176,7 @@ class OrderControllerIntegrationTest {
 
         given().
                 header("Content-Type", "application/json").
-                header(AUTH_HEADER, token).
+                header(TestConstants.AUTH_HEADER, token).
                 body(requestParams2.toJSONString()).
                 when().
                 post("/order").
@@ -193,7 +193,7 @@ class OrderControllerIntegrationTest {
 
         given().
                 header("Content-Type", "application/json").
-                header(AUTH_HEADER, token).
+                header(TestConstants.AUTH_HEADER, token).
                 body(requestParams.toJSONString()).
                 when().
                 post("/order").
@@ -207,7 +207,7 @@ class OrderControllerIntegrationTest {
 
         given().
                 header("Content-Type", "application/json").
-                header(AUTH_HEADER, token).
+                header(TestConstants.AUTH_HEADER, token).
                 body(requestParams2.toJSONString()).
                 when().
                 post("/order").
