@@ -1,6 +1,5 @@
 package com.scottlogic.matcher.service;
 
-import com.scottlogic.matcher.models.User;
 import com.scottlogic.matcher.models.Action;
 import com.scottlogic.matcher.models.Order;
 import com.scottlogic.matcher.models.Trade;
