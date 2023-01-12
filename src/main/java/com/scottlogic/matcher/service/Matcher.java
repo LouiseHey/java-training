@@ -37,17 +37,14 @@ public class Matcher {
         MatchedOrdersAndTrades matched = new MatchedOrdersAndTrades();
 
         for (Order sellOrder : sellOrders) {
-            if (buyOrder.getQuantity() == 0) {
-                break;
-            }
-
-            if (buyOrder.getPrice() >= sellOrder.getPrice()) {
+            if (buyOrder.getQuantity() != 0 && buyOrder.getPrice() >= sellOrder.getPrice()) {
                 Trade trade = new Trade(buyOrder, sellOrder, sellOrder.getPrice());
-                matched.addTrade(trade);
 
-                sellOrder.removeQuantity(trade.getQuantity());
-                matched.addOrder(sellOrder);
                 buyOrder.removeQuantity(trade.getQuantity());
+                sellOrder.removeQuantity(trade.getQuantity());
+
+                matched.addOrder(sellOrder);
+                matched.addTrade(trade);
             } else {
                 break;
             }
@@ -62,17 +59,14 @@ public class Matcher {
         MatchedOrdersAndTrades matched = new MatchedOrdersAndTrades();
 
         for (Order buyOrder : buyOrders) {
-            if (sellOrder.getQuantity() == 0) {
-                break;
-            }
-
-            if (sellOrder.getPrice() <= buyOrder.getPrice()) {
+            if (sellOrder.getQuantity() != 0 && sellOrder.getPrice() <= buyOrder.getPrice()) {
                 Trade trade = new Trade(buyOrder, sellOrder, buyOrder.getPrice());
-                matched.addTrade(trade);
 
                 buyOrder.removeQuantity(trade.getQuantity());
-                matched.addOrder(buyOrder);
                 sellOrder.removeQuantity(trade.getQuantity());
+
+                matched.addOrder(buyOrder);
+                matched.addTrade(trade);
             } else {
                 break;
             }
