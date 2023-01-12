@@ -33,7 +33,8 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                     .requestMatchers("/auth/**").permitAll()
-                    .anyRequest().authenticated()
+                    .requestMatchers("/order", "/order/**").authenticated()
+                    .anyRequest().permitAll()
                     .and()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

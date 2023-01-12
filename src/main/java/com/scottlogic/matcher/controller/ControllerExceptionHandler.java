@@ -1,6 +1,7 @@
 package com.scottlogic.matcher.controller;
 
-import com.mongodb.MongoWriteException;
+import com.scottlogic.matcher.exception.ResourceCreationException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,9 +16,9 @@ public class ControllerExceptionHandler {
         return "Constraint Violation: " + e.getMessage();
     }
 
-    @ExceptionHandler(MongoWriteException.class)
+    @ExceptionHandler(ResourceCreationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public String handleDuplicateResource(MongoWriteException e) {
+    public String handleDuplicateResource(ResourceCreationException e) {
         return "Resource already exists: " + e.getMessage();
     }
 }
