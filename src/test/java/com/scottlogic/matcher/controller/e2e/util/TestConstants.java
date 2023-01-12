@@ -4,6 +4,9 @@ public class TestConstants {
     public static final String DATABASE_CONNECTION = "mongodb://localhost:27017";
     public static final String DATABASE_NAME = "Matcher";
     public static final String DATABASE_USER_COLLECTION = "User";
+    public static final String DATABASE_ORDER_COLLECTION = "Order";
+    public static final String DATABASE_TRADE_COLLECTION = "Trade";
+
 
     public static final String AUTH_PREFIX = "Bearer ";
     public static final String AUTH_HEADER = "Authorization";

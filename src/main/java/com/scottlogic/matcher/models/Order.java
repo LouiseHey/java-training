@@ -1,6 +1,5 @@
 package com.scottlogic.matcher.models;
 
-import com.scottlogic.matcher.utility.IdGenerator;
 import lombok.Getter;
 
 @Getter
@@ -9,17 +8,19 @@ public class Order implements Comparable<Order> {
     private final String username;
     private final int price;
     private int quantity;
+    private final int initialQuantity;
     private final Action action;
 
-    public Order(String username, int price, int quantity, Action action) {
-        this(IdGenerator.generate(), username, price, quantity, action);
+    public Order(String username, int price, int quantity, int initialQuantity, Action action) {
+        this(null, username, price, quantity, initialQuantity, action);
     }
 
-    private Order(String orderId, String username, int price, int quantity, Action action) {
+    public Order(String orderId, String username, int price, int quantity, int initialQuantity, Action action) {
         this.orderId = orderId;
         this.username = username;
         this.price = price;
         this.quantity = quantity;
+        this.initialQuantity = initialQuantity;
         this.action = action;
     }
 

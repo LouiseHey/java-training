@@ -17,21 +17,26 @@ public class OrderDto {
     @NotNull
     @Min(value=0L, message="Price must be non negative.")
     private Integer quantity;
+    private Integer initialQuantity;
     @NotNull
     private final Action action;
 
-    public OrderDto(String username, Integer price, Integer quantity, Action action) {
+    public OrderDto(String username, Integer price, Integer quantity, Integer initialQuantity, Action action) {
         this.username = username;
         this.price = price;
         this.quantity = quantity;
+        this.initialQuantity = initialQuantity;
         this.action = action;
     }
 
     public static OrderDto create(Order order) {
-        return new OrderDto(order.getUsername(), order.getPrice(), order.getQuantity(), order.getAction());
+        return new OrderDto(order.getUsername(), order.getPrice(), order.getQuantity(), order.getInitialQuantity(), order.getAction());
     }
 
     public Order toModel(String username) {
-        return new Order(username, this.price, this.quantity, this.action);
+        if (this.initialQuantity == null) {
+            this.initialQuantity = this.quantity;
+        }
+        return new Order(username, this.price, this.quantity, this.initialQuantity, this.action);
     }
 }

@@ -1,5 +1,6 @@
 package com.scottlogic.matcher.controller.e2e.util;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -15,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static com.mongodb.client.model.Filters.eq;
 import static io.restassured.RestAssured.given;
 
-public class DatabaseUtil {
+public class DbTestUtil {
 
     public static void insertUser(User user) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -37,6 +38,26 @@ public class DatabaseUtil {
 
             Bson query = eq("username", username);
             collection.deleteOne(query);
+        }
+    }
+
+    public static void cleanOrders() {
+        try (MongoClient mongoClient = MongoClients.create(TestConstants.DATABASE_CONNECTION)) {
+            MongoDatabase database = mongoClient.getDatabase(TestConstants.DATABASE_NAME);
+            MongoCollection<Document> collection = database.getCollection(TestConstants.DATABASE_ORDER_COLLECTION);
+
+            BasicDBObject document = new BasicDBObject();
+            collection.deleteMany(document);
+        }
+    }
+
+    public static void cleanTrades() {
+        try (MongoClient mongoClient = MongoClients.create(TestConstants.DATABASE_CONNECTION)) {
+            MongoDatabase database = mongoClient.getDatabase(TestConstants.DATABASE_NAME);
+            MongoCollection<Document> collection = database.getCollection(TestConstants.DATABASE_TRADE_COLLECTION);
+
+            BasicDBObject document = new BasicDBObject();
+            collection.deleteMany(document);
         }
     }
 

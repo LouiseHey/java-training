@@ -1,11 +1,12 @@
 package com.scottlogic.matcher.controller.e2e;
 
-import com.scottlogic.matcher.controller.e2e.util.DatabaseUtil;
+import com.scottlogic.matcher.controller.e2e.util.DbTestUtil;
 import com.scottlogic.matcher.controller.e2e.util.TestConstants;
 import com.scottlogic.matcher.models.User;
 import io.restassured.RestAssured;
 import net.minidev.json.JSONObject;
-import org.junit.jupiter.api.AfterEach;
+
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,13 +28,13 @@ public class UserControllerTest {
 
         cleanUp();
         User user = new User(TestConstants.USERNAME, TestConstants.PASSWORD);
-        DatabaseUtil.insertUser(user);
+        DbTestUtil.insertUser(user);
     }
 
-    @AfterEach
-    public void cleanUp() {
-        DatabaseUtil.deleteUser(TestConstants.USERNAME);
-        DatabaseUtil.deleteUser(TestConstants.USERNAME2);
+    @AfterAll
+    static void cleanUp() {
+        DbTestUtil.deleteUser(TestConstants.USERNAME);
+        DbTestUtil.deleteUser(TestConstants.USERNAME2);
     }
 
     @Test

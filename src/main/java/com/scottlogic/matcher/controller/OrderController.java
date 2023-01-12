@@ -4,6 +4,7 @@ import com.scottlogic.matcher.controller.dto.OrderDto;
 import com.scottlogic.matcher.controller.dto.TradeDto;
 import com.scottlogic.matcher.service.Matcher;
 import com.scottlogic.matcher.models.Order;
+import com.scottlogic.matcher.service.OrderService;
 import com.scottlogic.matcher.utility.jwt.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -17,22 +18,24 @@ import java.util.List;
 public class OrderController {
 
     private final Matcher matcher;
+    private final OrderService orderService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public OrderController(Matcher matcher, JwtTokenProvider jwtTokenProvider) {
+    public OrderController(Matcher matcher, OrderService orderService, JwtTokenProvider jwtTokenProvider) {
         this.matcher = matcher;
+        this.orderService = orderService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @GetMapping(value = "/buy")
     public ResponseEntity<List<OrderDto>> getBuyOrders() {
-        List<OrderDto> orders = matcher.getBuyOrders().stream().map(OrderDto::create).toList();
+        List<OrderDto> orders = orderService.getBuyOrders().stream().map(OrderDto::create).toList();
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping(value = "/sell")
     public ResponseEntity<List<OrderDto>> getSellOrders() {
-        List<OrderDto> orders = matcher.getSellOrders().stream().map(OrderDto::create).toList();
+        List<OrderDto> orders = orderService.getSellOrders().stream().map(OrderDto::create).toList();
         return ResponseEntity.ok(orders);
     }
 

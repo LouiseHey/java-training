@@ -2,14 +2,14 @@ package com.scottlogic.matcher.controller.e2e;
 
 import com.scottlogic.matcher.controller.dto.OrderDto;
 import com.scottlogic.matcher.controller.dto.TradeDto;
-import com.scottlogic.matcher.controller.e2e.util.DatabaseUtil;
+import com.scottlogic.matcher.controller.e2e.util.DbTestUtil;
 import com.scottlogic.matcher.controller.e2e.util.TestConstants;
 import com.scottlogic.matcher.models.Action;
 import com.scottlogic.matcher.models.User;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import net.minidev.json.JSONObject;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,14 +39,16 @@ class OrderControllerTest {
         cleanUp();
 
         User user = new User(TestConstants.USERNAME, TestConstants.PASSWORD);
-        DatabaseUtil.insertUser(user);
+        DbTestUtil.insertUser(user);
 
-        this.token = DatabaseUtil.retrieveToken(user);
+        this.token = DbTestUtil.retrieveToken(user);
     }
 
-    @AfterEach
-    public void cleanUp() {
-        DatabaseUtil.deleteUser(TestConstants.USERNAME);
+    @AfterAll
+    static void cleanUp() {
+        DbTestUtil.deleteUser(TestConstants.USERNAME);
+        DbTestUtil.cleanOrders();
+        DbTestUtil.cleanTrades();
     }
 
     @Test

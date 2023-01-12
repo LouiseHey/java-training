@@ -1,6 +1,5 @@
 package com.scottlogic.matcher.models;
 
-import com.scottlogic.matcher.utility.IdGenerator;
 import lombok.Getter;
 
 @Getter
@@ -23,7 +22,11 @@ public class Trade {
     }
 
     public Trade(String buyOrderId, String sellOrderId, String buyUser, String sellUser, int price, int quantity) {
-        this.tradeId = IdGenerator.generate();
+        this(null, buyOrderId, sellOrderId, buyUser, sellUser, price, quantity);
+    }
+
+    public Trade(String id, String buyOrderId, String sellOrderId, String buyUser, String sellUser, int price, int quantity) {
+        this.tradeId = id;
         this.buyOrderId = buyOrderId;
         this.sellOrderId = sellOrderId;
         this.buyUser = buyUser;

@@ -1,31 +1,40 @@
 package com.scottlogic.matcher.service;
 
+import com.scottlogic.matcher.models.MatchedOrdersAndTrades;
 import com.scottlogic.matcher.models.Order;
 import com.scottlogic.matcher.models.Trade;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
 @Getter
 public class Matcher {
 
-    private final List<Order> buyOrders = new ArrayList<>();
-    private final List<Order> sellOrders = new ArrayList<>();
+    private final OrderService orderService;
+    private final TradeService tradeService;
 
-    public List<Trade> receiveOrder(Order order) {
-        return switch (order.getAction()) {
-            case BUY -> matchBuyOrder(order);
-            case SELL ->  matchSellOrder(order);
-        };
+    public Matcher(OrderService orderService, TradeService tradeService) {
+        this.orderService = orderService;
+        this.tradeService = tradeService;
     }
 
-    private List<Trade> matchBuyOrder(Order buyOrder) {
-        List<Trade> newTrades = new ArrayList<>();
+    public List<Trade> receiveOrder(Order order) {
+        order = orderService.saveNewOrder(order);
+
+        MatchedOrdersAndTrades matched = switch (order.getAction()) {
+            case BUY -> matchBuyOrder(order);
+            case SELL -> matchSellOrder(order);
+        };
+
+        orderService.saveOrders(matched.getOrders());
+        return tradeService.saveNewTrades(matched.getTrades());
+    }
+
+    private MatchedOrdersAndTrades matchBuyOrder(Order buyOrder) {
+        List<Order> sellOrders = orderService.getSellOrders();
+        MatchedOrdersAndTrades matched = new MatchedOrdersAndTrades();
 
         for (Order sellOrder : sellOrders) {
             if (buyOrder.getQuantity() == 0) {
@@ -34,25 +43,23 @@ public class Matcher {
 
             if (buyOrder.getPrice() >= sellOrder.getPrice()) {
                 Trade trade = new Trade(buyOrder, sellOrder, sellOrder.getPrice());
-                newTrades.add(trade);
+                matched.addTrade(trade);
 
                 sellOrder.removeQuantity(trade.getQuantity());
+                matched.addOrder(sellOrder);
                 buyOrder.removeQuantity(trade.getQuantity());
             } else {
                 break;
             }
         }
 
-        if (buyOrder.getQuantity() != 0) {
-            buyOrders.add(buyOrder);
-        }
-
-        sortOrderLists();
-        return newTrades;
+        matched.addOrder(buyOrder);
+        return matched;
     }
 
-    private List<Trade> matchSellOrder(Order sellOrder) {
-        List<Trade> newTrades = new ArrayList<>();
+    private MatchedOrdersAndTrades matchSellOrder(Order sellOrder) {
+        List<Order> buyOrders = orderService.getBuyOrders();
+        MatchedOrdersAndTrades matched = new MatchedOrdersAndTrades();
 
         for (Order buyOrder : buyOrders) {
             if (sellOrder.getQuantity() == 0) {
@@ -61,29 +68,17 @@ public class Matcher {
 
             if (sellOrder.getPrice() <= buyOrder.getPrice()) {
                 Trade trade = new Trade(buyOrder, sellOrder, buyOrder.getPrice());
-                newTrades.add(trade);
+                matched.addTrade(trade);
 
                 buyOrder.removeQuantity(trade.getQuantity());
+                matched.addOrder(buyOrder);
                 sellOrder.removeQuantity(trade.getQuantity());
             } else {
                 break;
             }
         }
 
-        if (sellOrder.getQuantity() != 0) {
-            sellOrders.add(sellOrder);
-        }
-
-        sortOrderLists();
-        return newTrades;
-    }
-
-    private void sortOrderLists() {
-        buyOrders.removeIf(Order::isQuantityZero);
-        buyOrders.sort(Comparator.naturalOrder());
-
-        sellOrders.removeIf(Order::isQuantityZero);
-        sellOrders.sort(Comparator.naturalOrder());
-        Collections.reverse(sellOrders);
+        matched.addOrder(sellOrder);
+        return matched;
     }
 }
