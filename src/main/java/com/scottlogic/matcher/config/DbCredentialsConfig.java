@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @Configuration
 @Profile("container")
 @EnableMongoRepositories(basePackages = "com.scottlogic.matcher")
-public class DbConfigContainer extends AbstractMongoClientConfiguration {
+public class DbCredentialsConfig extends AbstractMongoClientConfiguration {
     @Value("${spring.data.mongodb.database}")
     private String databaseName;
 
