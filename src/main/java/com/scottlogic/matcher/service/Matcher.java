@@ -20,7 +20,7 @@ public class Matcher {
         this.tradeService = tradeService;
     }
 
-    public List<Trade> receiveOrder(Order order) {
+    public synchronized List<Trade> receiveOrder(Order order) {
         order = orderService.saveNewOrder(order);
 
         MatchedOrdersAndTrades matched = switch (order.getAction()) {
