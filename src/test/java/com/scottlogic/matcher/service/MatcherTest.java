@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import com.scottlogic.matcher.service.database.OrderDbService;
+import com.scottlogic.matcher.service.database.TradeDbService;
 import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -15,13 +17,13 @@ import static org.mockito.Mockito.when;
 
 class MatcherTest {
     private static Matcher matcher;
-    private static OrderService orderService;
-    private static TradeService tradeService;
+    private static OrderDbService orderService;
+    private static TradeDbService tradeService;
 
     @BeforeAll
     static void beforeAll() {
-        orderService = Mockito.mock(OrderService.class);
-        tradeService = Mockito.mock(TradeService.class);
+        orderService = Mockito.mock(OrderDbService.class);
+        tradeService = Mockito.mock(TradeDbService.class);
 
         when(orderService.saveNewOrder(any(Order.class))).thenAnswer(i -> i.getArguments()[0]);
         when(tradeService.saveNewTrades(anyList())).thenAnswer(i -> i.getArguments()[0]);

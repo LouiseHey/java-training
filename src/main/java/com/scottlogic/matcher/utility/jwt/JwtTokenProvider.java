@@ -1,6 +1,6 @@
 package com.scottlogic.matcher.utility.jwt;
 
-import com.scottlogic.matcher.service.UserDetailsServiceImpl;
+import com.scottlogic.matcher.service.UserService;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,9 +28,9 @@ public class JwtTokenProvider {
     @Value("${security.jwt.token.expire-length}")
     private long validityInMilliseconds;
 
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserService userDetailsService;
 
-    public JwtTokenProvider(UserDetailsServiceImpl userDetailsService) {
+    public JwtTokenProvider(UserService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
