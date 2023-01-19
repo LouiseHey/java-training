@@ -1,8 +1,7 @@
-package com.scottlogic.matcher.service;
+package com.scottlogic.matcher.service.database;
 
 import com.scottlogic.matcher.data.TradeRepository;
 import com.scottlogic.matcher.models.Trade;
-import com.scottlogic.matcher.service.database.TradeDbService;
 import java.util.List;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
@@ -12,7 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class TradeServiceTest {
+public class TradeDbServiceTest {
     private static TradeDbService tradeService;
     private static TradeRepository tradeRepository;
 

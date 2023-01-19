@@ -1,10 +1,9 @@
-package com.scottlogic.matcher.service;
+package com.scottlogic.matcher.service.database;
 
 import com.scottlogic.matcher.data.OrderRepository;
 import com.scottlogic.matcher.data.entity.OrderEntity;
 import com.scottlogic.matcher.models.Action;
 import com.scottlogic.matcher.models.Order;
-import com.scottlogic.matcher.service.database.OrderDbService;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -15,7 +14,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class OrderServiceTest {
+public class OrderDbServiceTest {
     private static OrderDbService orderService;
     private static OrderRepository orderRepository;
 
