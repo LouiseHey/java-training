@@ -96,4 +96,19 @@ public class UserControllerTest {
                 then().
                 statusCode(409);
     }
+
+    @Test
+    public void givenUserAlreadyExistsInDb_whenLoginWithWrongPassword_Then401Returned() {
+        JSONObject requestParams = new JSONObject();
+        requestParams.put("username", TestConstants.USERNAME);
+        requestParams.put("password", TestConstants.PASSWORD_NONEXISTENT);
+
+        given().
+            header("Content-Type", "application/json").
+            body(requestParams.toJSONString()).
+            when().
+            post("/auth/signin").
+            then().
+            statusCode(401);
+    }
 }
